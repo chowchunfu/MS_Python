@@ -16,6 +16,7 @@ Click on the tiles and reveal them. The number of safe tiles and your progress a
 Click on the tiles that have mines to place flags.
 
 Features to Add in the future:
+- Chording
 - First click not mime
 - Timer
 - Board Size options
