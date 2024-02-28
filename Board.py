@@ -5,6 +5,7 @@ Created on Tue Feb 27 13:53:36 2024
 @author: someone
 """
 import random
+import datetime
 
 class board:
     WIDTH = 30
@@ -49,7 +50,11 @@ class stat:
         current = 0
         maximum = board.MINES
         text = "Flags: " + str(current) + "/" + str(maximum) 
-        
+    class timer:
+        onstart = datetime.datetime.now()
+        current = datetime.datetime.now()
+        delta = current - onstart
+        text = "Time: " + str(delta.total_seconds()) + "s"
 
 def GetAdjacentCells(Cell):
     x = Cell[0]
@@ -122,5 +127,3 @@ def PrintBoard():
             Cell = (x,y)
             string += GetRevealedTile(Cell)         
     print(string)
-    
-Board = GetBoard()

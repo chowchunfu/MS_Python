@@ -7,8 +7,10 @@ Created on Tue Feb 27 14:24:57 2024
 
 import tkinter as tk
 from PIL import ImageTk, Image
+import datetime
 
 from Board import *
+from stat import *
 board.board = GetBoard()
 PrintBoard()
 
@@ -71,7 +73,12 @@ Label_opened.place(x=100,y=100, anchor = "center")
 Label_flags = tk.Label(Frame2,text=stat.flags.text, font=("Verdana",12))
 Label_flags.place(x=100,y=140, anchor = "center")
 
+Label_timer = tk.Label(Frame2,text=stat.timer.text,font=("Verdana",12))
+Label_timer.place(x=100,y=170, anchor = "center")
+
+
 from imgs import *
+
 
 def StartNewGame():
     for y in range(board.HEIGHT):
@@ -97,6 +104,10 @@ def Open_tile(Cell):
     
 def update_stat_opened():
     stat.opened.current +=1
+    if stat.opened.current == 1:
+        stat.timer.onstart = datetime.datetime.now()
+        update_stat_time()
+    
     stat.opened.text = "Opened: " + str(stat.opened.current) + "/" + str(stat.opened.maximum)
     Label_opened.config(text=stat.opened.text)
 
@@ -104,5 +115,14 @@ def update_stat_flags():
     stat.flags.current +=1
     stat.flags.text = "Flags: " + str(stat.flags.current) + "/" + str(stat.flags.maximum)
     Label_flags.config(text=stat.flags.text)
+
+def update_stat_time():
+    if stat.opened.current != stat.opened.maximum:
+        stat.timer.current = datetime.datetime.now()
+        stat.timer.delta = stat.timer.current - stat.timer.onstart
+        stat.timer.text = "Time: " + str(stat.timer.delta.total_seconds()) + "s"
+        Label_timer.config(text=stat.timer.text)
+        Label_timer.after(250,update_stat_time)        
+
 
 root.mainloop()
