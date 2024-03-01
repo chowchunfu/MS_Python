@@ -14,15 +14,27 @@ def GetImg(filename,GRID_SIZE):
     img = ImageTk.PhotoImage(img)
     return img
 
+def NewImg(GRIDSIZE,color):
+    img = Image.new("RGBA",(GRIDSIZE,GRIDSIZE),color)
+    img = ImageTk.PhotoImage(img)
+    return img
+
 class imgs:
     imgs = {}
     storage = {}
     
-    imgs["tile"] = GetImg("tile",board.GRID_SIZE)
-    imgs["flag"] = GetImg("flag",board.GRID_SIZE)
+    imgs["tile"] = GetImg("tile",Board.GRID_SIZE)
+    imgs["flag"] = GetImg("flag",Board.GRID_SIZE)
     for num in range(0,9):
         filename = "num" + str(num)
-        imgs[filename] = GetImg(filename,board.GRID_SIZE)
+        imgs[filename] = GetImg(filename,Board.GRID_SIZE)
 
+    imgs["green_tile"] = NewImg(Board.GRID_SIZE,(0,255,0,96))
+    imgs["blue_tile"] = NewImg(Board.GRID_SIZE,(0,0,255,96))
+    imgs["yellow_tile"] = NewImg(Board.GRID_SIZE,(255,255,0,96))
+    imgs["red_tile"] = NewImg(Board.GRID_SIZE,(255,0,0,96))
+    imgs["magenta_tile"] = NewImg(Board.GRID_SIZE,(255,0,255,96))
+    imgs["white_tile"] = NewImg(Board.GRID_SIZE,(255,255,255,96))
     
-    
+    for filename in imgs.keys():
+        storage[filename] = {}
