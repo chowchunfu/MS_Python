@@ -57,11 +57,17 @@ def onclick_Button_adjopened():
 
 
 def onclick_Button_A0():
-    A0.random_move()
-    Cell = A0.tile_to_open
-    filename = GetFilename(Cell)
-    Overlay_tile(Cell,filename)
+    A0.A0()
+    if A0.no_of_revealed_tiles == 0:
+        A0.random_move()
+    for Cell in GetCandidates(Board.board["pred_flags"],1):
+        if Cell not in imgs.storage["red_tile"].keys():
+            Overlay_tile(Cell,"red_tile")
+    for Cell in A0.tiles_to_open:
+        filename = GetFilename(Cell)
+        Overlay_tile(Cell,filename)
     update_Label()
+
 
 def onclick_Button_A1():
     A1.A1()
@@ -73,11 +79,40 @@ def onclick_Button_A1():
         Overlay_tile(Cell,filename)
     update_Label()
 
+
 def onclick_Button_Potentiallysafe():
     Clear_Overlays()
     for Cell in Board.GetPotentiallysafeCells():
         Overlay_tile(Cell,"white_tile")
 
+
+def onclick_Button_GetLogicChain():
+    Cell = Entries["GetLogicChain"].get().split(",")
+    Cell[0] = int(Cell[0])
+    Cell[1] = int(Cell[1])
+    Cell = tuple(Cell)
+
+    LogicChain = A2.GetLogicChain(Cell)
+    print(LogicChain)
+
+def onclick_Button_GetLogicChains():
+    A2.ResetLogicChains()
+    A2.GetLogicChains()
+    print("Current Logic Chains:")
+    print(A2.LogicChains)
+    
+    A2.FindNewLogicChains()
+    print(A2.New_LogicChains)
+
+def onclick_Button_A2():
+    A2.A2()
+    for Cell in GetCandidates(Board.board["pred_flags"],1):
+        if Cell not in imgs.storage["red_tile"].keys():
+            Overlay_tile(Cell,"red_tile")
+    for Cell in A2.tiles_to_open:
+        filename = GetFilename(Cell)
+        Overlay_tile(Cell,filename)
+    update_Label()
 
 
 def onclick_Button_Candidates():
@@ -128,6 +163,8 @@ Canvas.place(x=0,y=0,anchor = "nw")
 Canvas.bind('<Button-1>',onclick_tile)
 
 Label_St = {}
+Buttons = {}
+Entries = {}
 
 Label_St["opened"] = tk.Label(Frame2,text=St.opened_text, font=("Verdana",12))
 Label_St["opened"].place(x=100,y=100, anchor = "center")
@@ -135,7 +172,7 @@ Label_St["opened"].place(x=100,y=100, anchor = "center")
 Label_St["flags"] = tk.Label(Frame2,text=St.flags_text, font=("Verdana",12))
 Label_St["flags"].place(x=100,y=130, anchor = "center")
 
-Buttons = {}
+
 
 Buttons["floating"] = tk.Button(Frame2, text="Floating",width=7,command=onclick_Button_floating)
 Buttons["floating"].place(x=50,y=20,anchor="center")
@@ -149,14 +186,29 @@ Buttons["opened"].place(x=180,y=20,anchor="center")
 Buttons["adjopened"] = tk.Button(Frame2, text="AdjOpened",width=9,command=onclick_Button_adjopened)
 Buttons["adjopened"].place(x=250,y=20,anchor="center")
 
-Buttons["A1"] = tk.Button(Frame2, text="A1",width=5,command=onclick_Button_A1)
-Buttons["A1"].place(x=120,y=50,anchor="center")
 
 Buttons["A0"] = tk.Button(Frame2, text="A0",width=5,command=onclick_Button_A0)
 Buttons["A0"].place(x=50,y=50,anchor="center")
 
-Buttons["Potentiallysafe"] = tk.Button_A1 = tk.Button(Frame2, text="Potentiallysafe",width=13,command=onclick_Button_Potentiallysafe)
+Buttons["A1"] = tk.Button(Frame2, text="A1",width=5,command=onclick_Button_A1)
+Buttons["A1"].place(x=120,y=50,anchor="center")
+
+Buttons["Potentiallysafe"] = tk.Button(Frame2, text="Potentiallysafe",width=13,command=onclick_Button_Potentiallysafe)
 Buttons["Potentiallysafe"].place(x=220,y=50,anchor="center")
+
+Entries["GetLogicChain"] = tk.Entry(Frame2,width=8)
+Entries["GetLogicChain"].insert(0,"0,0")
+Entries["GetLogicChain"].place(x=20,y=160)
+
+Buttons["GetLogicChain"] = tk.Button(Frame2, text="GetLogic",width=8,command=onclick_Button_GetLogicChain)
+Buttons["GetLogicChain"].place(x=80,y=160)
+
+Buttons["GetLogicChain"] = tk.Button(Frame2, text="GetLogics",width=8,command=onclick_Button_GetLogicChains)
+Buttons["GetLogicChain"].place(x=150,y=160)
+
+Buttons["A2"] = tk.Button(Frame2, text="A2",width=5,command=onclick_Button_A2)
+Buttons["A2"].place(x=220,y=160)
+
 
 from imgs import *
 

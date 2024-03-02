@@ -41,6 +41,7 @@ class sim:
         for game in range(games):
             Board.ResetBoard_Rd()
             sim.playing = True
+            print(GetBoardString())
             sim.Check_GameState(A0.first_move())
             
             sim.play(Alg_level)
@@ -64,13 +65,17 @@ class sim:
             sim.play_as_A0()
         elif Alg_level == "1" or Alg_level == "A1":
             sim.play_as_A1()
-            
+        elif Alg_level == "2" or Alg_level == "A2":
+            sim.play_as_A2()
 
     
     
     def play_as_A0():
         while sim.playing:
-            sim.Check_GameState(A0.random_move())
+            sim.Check_GameStates(A0.A0())
+            if A0.no_of_revealed_tiles == 0:
+                sim.Check_GameState(A0.random_move())
+            
 
     def play_as_A1():
         print(GetBoardString())
@@ -79,9 +84,21 @@ class sim:
         
             if A1.no_of_revealed_tiles == 0:
                 sim.Check_GameState(A0.random_move())
+    
+    def play_as_A2():
+        while sim.playing:
+            Alg_level = "A1"
+            sim.Check_GameStates(A1.A1())
             
+            if A1.no_of_revealed_tiles == 0:
+                Alg_level = "A2"
+            if Alg_level == "A2":
+                sim.Check_GameStates(A2.A2())
+                if A2.no_of_revealed_tiles == 0:
+                    sim.Check_GameState(A0.random_move())
+    
         
-sim.sim(50,"A1")
+sim.sim(25000,"A2")
 
 
 

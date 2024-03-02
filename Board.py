@@ -25,9 +25,9 @@ def GetCandidates(Cells,req_value):
 
 
 class Board:
-    WIDTH = 30
-    HEIGHT = 16
-    MINES = 50
+    WIDTH = 9
+    HEIGHT = 9
+    MINES = 10
     GRID_SIZE = 24
     
     
@@ -35,6 +35,9 @@ class Board:
     IsFirstClick = False
     opened_current = 0
     opened_max = WIDTH * HEIGHT - MINES
+    
+    pred_flags_current = 0
+    pred_flags_max = MINES
     
     
     def ResetBoard_L():
@@ -123,12 +126,18 @@ class Board:
     
     
     def GetNumber(Cell):
-        Neighbor = Board.GetNeighbor(Cell)
         number = 0
-        for Cell in Neighbor:
-            number += Board.board["MINES"][Cell]
+        for Neighbor in Board.GetNeighbor(Cell):
+            number += Board.board["MINES"][Neighbor]
         return number
 
+    def GetNoOfPredFlags(Cell):
+        number = 0
+        for Neighbor in Board.GetNeighbor(Cell):
+            number += Board.board["pred_flags"][Neighbor]
+        return number
+        
+        
 
     def GetAdjacentCells():
         candidates = []
@@ -189,9 +198,20 @@ def Open_tiles(Cells):
     revealed_tiles = []
     for Cell in Cells:
         revealed_tile = Open_tile(Cell)
-        revealed_tiles.append(revealed_tile)
+        if revealed_tile != None:
+            revealed_tiles.append(revealed_tile)
     return revealed_tiles    
-    
+
+def PredFlag_tile(Cell):
+    if Board.board["opened"][Cell] == 0 and Board.board["pred_flags"][Cell] == 0:
+        Board.board["pred_flags"][Cell] = 1
+        Board.pred_flags_current += 1
+
+def PredFlag_tiles(Cells):
+    for Cell in Cells:
+        PredFlag_tile(Cell)            
+
+
 def GetBoardString():
     string = ""
     for y in range(Board.HEIGHT):
